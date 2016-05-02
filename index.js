@@ -39,6 +39,7 @@ app.post('/users', jsonParser, function(req, res) {
     });
 
     user.save(function(err, user) {
+      res.body= {}
         if (err) {
             return res.sendStatus(500);
         }
@@ -54,10 +55,6 @@ app.get('/users/:userId', function(req, res) {
     }, function(err, user) {
         if (err) {
             return res.sendStatus(500);
-        }
-        var message3 = {message: 'User not found'};
-        if(!user) {
-            return res.status(404).json(message3);
         }
 
         return res.json(user);
@@ -85,6 +82,7 @@ app.put('/users/:userId', jsonParser, function(req, res) {
         return res.status(200).json({});
     })
 });
+
 
 var databaseUri = global.databaseUri || 'mongodb://localhost/sup';
 mongoose.connect(databaseUri).then(function() {
