@@ -105,12 +105,26 @@ app.delete('/users/:userId', jsonParser, function(req, res) {
 
 app.get('/messages', function(req, res) {
     Message.find({}, function(err, messages) {
-        console.log(messages);
         if (err) {
             return res.sendStatus(500);
         }
-
         return res.json(messages);
+    });
+});
+
+app.post('/messages', jsonParser, function(req, res) {
+    var message = new Message({
+        from: req.body.from,
+        to: req.body.to,
+        text: req.body.text
+    });
+
+    message.save(function(err, message) {
+        res.body= {}
+        if (err) {
+            return res.sendStatus(500);
+        }
+        return res.status(201).location('/message/' + message.from).json({});
     });
 });
 
