@@ -20,6 +20,15 @@ app.get('/users', function(req, res) {
 });
 
 app.post('/users', jsonParser, function(req, res) {
+    if (!req.body.username) {
+      // return res.sendStatus(422);
+      var message = {
+        message: 'Missing field: username'
+      }
+      console.log('the message', message);
+      return res.status(422).json(message)
+    }
+
     var user = new User({
         username: req.body.username
     });
@@ -54,4 +63,3 @@ mongoose.connect(databaseUri).then(function() {
 });
 
 module.exports = app;
-
