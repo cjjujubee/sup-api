@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var User = require('./models/user');
+var Message = require('./models/message')
 
 var app = express();
 
@@ -98,7 +99,20 @@ app.delete('/users/:userId', jsonParser, function(req, res) {
        }
        return res.status(200).json({});
    });
-}); 
+});
+
+//messages
+
+app.get('/messages', function(req, res) {
+    Message.find({}, function(err, messages) {
+        console.log(messages);
+        if (err) {
+            return res.sendStatus(500);
+        }
+
+        return res.json(messages);
+    });
+});
 
 var databaseUri = global.databaseUri || 'mongodb://localhost/sup';
 mongoose.connect(databaseUri).then(function() {
