@@ -29,7 +29,11 @@ app.post('/users', jsonParser, function(req, res) {
       return res.status(422).json(message)
     }
 
-    
+    if (typeof req.body.username != 'string' ){
+        var message2 = { message: 'Incorrect field type: username'}
+
+      return res.status(422).json(message2)
+    }
 
     var user = new User({
         username: req.body.username
