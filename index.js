@@ -25,7 +25,6 @@ app.post('/users', jsonParser, function(req, res) {
       var message = {
         message: 'Missing field: username'
       }
-      console.log('the message', message);
       return res.status(422).json(message)
     }
 
@@ -66,8 +65,20 @@ app.get('/users/:userId', function(req, res) {
 });
 
 app.put('/users/:userId', jsonParser, function(req, res) {
+    if (!req.body.username) {
+      // return res.sendStatus(422);
+      var message = {
+        message: 'Missing field: username'
+      }
+      return res.status(422).json(message)
+    }
+    if (typeof req.body.username != 'string' ){
+        var message2 = { message: 'Incorrect field type: username'}
+
+      return res.status(422).json(message2)
+    }
     var newUser = req.body;
-    User.findByIdAndUpdate(req.params.userId, newUser, function(err) {
+    User.findByIdAndUpdate(req.params.userId, newUser, {upsert:true}, function(err) {
         if (err) {
             return res.sendStatus(500);
         }
