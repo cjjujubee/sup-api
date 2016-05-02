@@ -19,6 +19,21 @@ app.get('/users', function(req, res) {
     });
 });
 
+app.get('/users/:userId', function(req, res) {
+    User.findOne({
+        _id: req.params.userId
+    }, function(err, user) {
+        if(!user) {
+          return res.sendStatus(404);
+      }
+        if (err) {
+            return res.sendStatus(500);
+        }
+
+        return res.json(user);
+    });
+});
+
 app.post('/users', jsonParser, function(req, res) {
     if (!req.body.username) {
       // return res.sendStatus(422);
@@ -48,19 +63,6 @@ app.post('/users', jsonParser, function(req, res) {
     });
 });
 
-
-app.get('/users/:userId', function(req, res) {
-    User.findOne({
-        _id: req.params.userId
-    }, function(err, user) {
-        if (err) {
-            return res.sendStatus(500);
-        }
-
-        return res.json(user);
-    });
-});
-
 app.put('/users/:userId', jsonParser, function(req, res) {
     if (!req.body.username) {
       // return res.sendStatus(422);
@@ -83,16 +85,30 @@ app.put('/users/:userId', jsonParser, function(req, res) {
     })
 });
 
-app.delete('/users/:userId', jsonParser, function(req, res) {
-   User.findByIdAndRemove(req.params.userId, function(err, user) {
-       if (err) {
-         return res.sendStatus(500);
-       }
-       if (!user) {
-         return res.status(404).json({message: 'User not found'});
-       }
-       return res.status(200).json({});
-   });
+// app.delete('/users/:userId', jsonParser, function(req, res) {
+//    User.findByIdAndRemove(req.params.userId, function(err, user) {
+//         console.log(user);
+//        if (err) {
+//          return res.sendStatus(500);
+//        }
+//        if (user == null) {
+//          return res.status(404).json({message: 'User not found'});
+//        }
+//        return res.status(200).json({});
+//    });
+// });
+
+app.delete('/users/:userId', function(req, res) {
+  User.findByIdAndRemove({
+    _id: req.params.userId
+  }).then(function(user) {
+    if (!user) {
+      return res.status(404).json({message: 'User not found'});
+    }
+    return res.status(200).json({});
+  }).catch(function(err) {
+    return res.sendStatus(500);
+  });
 });
 
 var databaseUri = global.databaseUri || 'mongodb://localhost/sup';
