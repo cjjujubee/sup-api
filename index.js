@@ -75,6 +75,18 @@ app.put('/users/:userId', jsonParser, function(req, res) {
     })
 });
 
+app.delete('/users/:userId', jsonParser, function(req, res) {
+   User.findByIdAndRemove(req.params.userId, function(err, user) {
+       if (err) {
+         return res.sendStatus(500);
+       }
+       if (!user) {
+         return res.status(404).json({message: 'User not found'});
+       }
+       return res.status(200).json({});
+   });
+});
+
 var databaseUri = global.databaseUri || 'mongodb://localhost/sup';
 mongoose.connect(databaseUri).then(function() {
     app.listen(8080, function() {
