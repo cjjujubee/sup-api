@@ -29,6 +29,8 @@ app.post('/users', jsonParser, function(req, res) {
       return res.status(422).json(message)
     }
 
+    
+
     var user = new User({
         username: req.body.username
     });
