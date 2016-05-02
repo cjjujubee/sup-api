@@ -56,9 +56,23 @@ app.get('/users/:userId', function(req, res) {
         if (err) {
             return res.sendStatus(500);
         }
+        var message3 = {message: 'User not found'};
+        if(!user) {
+            return res.status(404).json(message3);
+        }
 
         return res.json(user);
     });
+});
+
+app.put('/users/:userId', jsonParser, function(req, res) {
+    var newUser = req.body;
+    User.findByIdAndUpdate(req.params.userId, newUser, function(err) {
+        if (err) {
+            return res.sendStatus(500);
+        }
+        return res.status(200).json({});
+    })
 });
 
 var databaseUri = global.databaseUri || 'mongodb://localhost/sup';
