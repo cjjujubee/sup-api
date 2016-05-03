@@ -365,6 +365,8 @@ describe('Message endpoints', function() {
                         res.body.should.be.an('object');
                         res.body.should.be.empty;
 
+                        console.log('response header: '+res.headers.location);
+
                         return chai.request(app)
                             .get(res.headers.location);
                     })
